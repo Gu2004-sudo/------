@@ -213,17 +213,20 @@ export default {
 
     //撤回功能
     deleteJob(row) {
-      const data = { postID: row.postID }
-      axios.post('/target/deletePostsBypostID', data).then(data2 => {
-        console.log("添加", data2.data)
-        if (data2.data === 1) {
-          this.fetchJobs();
-          this.$message({ message: '撤回成功', type: 'success' });
+      if (confirm("您确定要撤回这个岗位吗？")) {
+        const data = { postID: row.postID }
+        axios.post('/target/deletePostsBypostID', data).then(data2 => {
+          console.log("添加", data2.data)
+          if (data2.data === 1) {
+            this.fetchJobs();
+            this.$message({ message: '撤回成功', type: 'success' });
 
-        } else {
-          this.$message({ message: '撤回失败', type: 'error' });
-        }
-      })
+          } else {
+            this.$message({ message: '撤回失败', type: 'error' });
+          }
+        })
+      }
+
 
     },
 
@@ -246,7 +249,7 @@ export default {
               if (response.data === 1) {
                 this.$message({ message: '添加成功', type: 'success' });
                 this.postSearch()
-                this.dialogVisible=false
+                this.dialogVisible = false
               } else {
                 this.$message({ message: '添加失败', type: 'error' });
               }
@@ -351,4 +354,5 @@ function formatDate(date) {
 
 [class~="el-form-item"][class~="is-required"] .el-form-item__label {
   width: 120px !important;
-}</style>
+}
+</style>

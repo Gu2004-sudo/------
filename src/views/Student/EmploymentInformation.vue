@@ -151,8 +151,9 @@ export default {
         this.total = res.data.data.total;
         for (let index = 0; index < this.tableData.length; index++) {
           const element = this.tableData[index];
-          if (element.entryTime != null && element.entryTime != "") {
+          if (element.entryTime != null && element.entryTime != "" &&element.endTime!=''&&element.endTime!=null) {
             const et = element.entryTime.indexOf("T");
+            const ed = element.endTime.indexOf("T");
             // = this.postList[index].entryTime;
             if (et != -1) {
               let date = new Date(element.entryTime);
@@ -160,7 +161,14 @@ export default {
               let newDateStr = date.toISOString().slice(0, et);
               this.tableData[index].entryTime = newDateStr;
             }
+            if (ed != -1) {
+              let date = new Date(element.endTime);
+              date.setDate(date.getDate() + 1);
+              let newDateStr = date.toISOString().slice(0, et);
+              this.tableData[index].endTime = newDateStr;
+            }
             this.ge;
+            console.log(this.tableData)
           }
           this.getCompanyNameAndAddress(index, element.companyID);
         }
