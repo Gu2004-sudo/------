@@ -3,50 +3,28 @@
     <div class="box-content">
       <div class="lndivt" style="margin-bottom: 15px">
         <el-breadcrumb separator="/">
-          <el-breadcrumb-item >首页</el-breadcrumb-item>
+          <el-breadcrumb-item>首页</el-breadcrumb-item>
           <el-breadcrumb-item>就业管理</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
 
       <div class="box1" style=" height: 70px;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);background-color: white;">
         <label for="" style="">请输入公司名：</label>
-        <el-input
-          v-model="companyName"
-          placeholder="请输入内容"
-          style="width: 200px; margin-left: 10px"
-        ></el-input>
+        <el-input v-model="companyName" placeholder="请输入内容" style="width: 200px; margin-left: 10px"></el-input>
         <label for="" style="width: 80px; margin-left: 40px">请选择：</label>
 
         <div class="block" style="margin-right: 20px">
-          <el-date-picker
-            v-model="time"
-            type="datetimerange"
-            :picker-options="pickerOptions"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            align="right"
-          >
+          <el-date-picker v-model="time" type="datetimerange" :picker-options="pickerOptions" range-separator="至"
+            start-placeholder="开始日期" end-placeholder="结束日期" align="right">
           </el-date-picker>
         </div>
 
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          style="width: 80px; height: 40px"
-          @click="selectPostAndTime()"
-          >搜索</el-button
-        >
+        <el-button type="primary" icon="el-icon-search" style="width: 80px; height: 40px"
+          @click="selectPostAndTime()">搜索</el-button>
       </div>
       <div class="box2" style="height: 300px">
-        <el-table
-          :data="tableData"
-          :header-cell-style="{ background: '#eee', color: '#606266' }"
-          height="300"
-          style="width: 100%"
-          bac
-          max-height="300"
-        >
+        <el-table :data="filteredData()" :header-cell-style="{ background: '#eee', color: '#606266' }" height="300"
+          style="width: 100%" bac max-height="300">
           <el-table-column fixed prop="entryTime" label="日期" width="140">
           </el-table-column>
           <el-table-column prop="companyName" label="公司名" width="110">
@@ -58,11 +36,7 @@
           </el-table-column>
           <el-table-column prop="postName" label="招聘岗位" width="110">
           </el-table-column>
-          <el-table-column
-            prop="postResponsibility"
-            label="岗位职责(要求)"
-            width="280"
-          >
+          <el-table-column prop="postResponsibility" label="岗位职责(要求)" width="280">
           </el-table-column>
           <el-table-column prop="postNature" label="性质" width="110">
           </el-table-column>
@@ -77,40 +51,22 @@
                 type="text"
                 size="small"
               > -->
-              <el-button
-                type="primary"
-                size="mini"
-                style="font-size: 15px; margin-right: 4px"
-                @click="application(scope.row)"
-                ><i class="el-icon-document-add"></i>申请</el-button
-              >
+              <el-button type="primary" size="mini" style="font-size: 15px; margin-right: 4px"
+                @click="application(scope.row)"><i class="el-icon-document-add"></i>申请</el-button>
               <!-- </el-button> -->
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="box3" style="height: 60px; background-color: white">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="this.page.court"
-          layout="sizes, prev, pager, next"
-          :total="total"
-        >
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page.sync="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="this.page.court"
+          layout="sizes, prev, pager, next" :total="total">
         </el-pagination>
       </div>
       <el-dialog title="简历上传" :visible.sync="dialogFormVisible">
-        <el-upload
-          class="upload-demo"
-          drag
-          action="/main/upload"
-          multiple
-          :on-success="handlePreview"
-          :before-remove="beforeRemove"
-          :on-remove="handleRemove"
-        >
+        <el-upload class="upload-demo" drag action="/main/upload" multiple :on-success="handlePreview"
+          :before-remove="beforeRemove" :on-remove="handleRemove">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
@@ -131,6 +87,14 @@ export default {
     this.getData();
   },
   methods: {
+    filteredData() {
+      const now = new Date();
+      return this.tableData.filter(row => {
+        const entryTime = new Date(row.entryTime);
+        return entryTime >= now && row.numberPeople > 0;
+      });
+      // console.log(this.tableData, 'tab')
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.page.court = val;
@@ -217,22 +181,22 @@ export default {
           }
         });
     },
-    selectStudent(){
-      axios.get("/main/selectAll",{
-        params:{
-          studentID:this.studentID
+    selectStudent() {
+      axios.get("/main/selectAll", {
+        params: {
+          studentID: this.studentID
         }
-      }).then(res=>{
+      }).then(res => {
 
       })
     },
     application(row) {
-      
+
       const isConfirmed = window.confirm("确定要申请这个岗位吗？");
       if (isConfirmed) {
-        this.form.companyID=row.companyID;
-        this.form.postName=row.postName;
-        this.form.postID=row.postID;
+        this.form.companyID = row.companyID;
+        this.form.postName = row.postName;
+        this.form.postID = row.postID;
         this.dialogFormVisible = true;
         console.log(localStorage.getItem("userName"));
         axios
@@ -247,12 +211,12 @@ export default {
     },
     uploadFile() {
       this.dialogFormVisible = false;
-     
+
       this.student[0].fileSrc = this.fileName;
-      this.form.curriculumVitae=this.fileName;
-      this.form.studentName=this.student[0].studentName;
-      this.form.studentID=this.student[0].studentID
-    
+      this.form.curriculumVitae = this.fileName;
+      this.form.studentName = this.student[0].studentName;
+      this.form.studentID = this.student[0].studentID
+
       axios
         .put("/main/updateStudent", JSON.stringify(this.student[0]), {
           headers: {
@@ -265,26 +229,26 @@ export default {
 
           }
         });
-        axios.post("/main/insertApplication",JSON.stringify(this.form),{
-          headers:{
-            "Content-Type": "application/json",
-          }
-        }).then(res=>{
-          if(res.data.data==1){
-            this.$message({
-              type:"success",
-              message:"申请成功"
-            })
-          }
-        })
+      axios.post("/main/insertApplication", JSON.stringify(this.form), {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then(res => {
+        if (res.data.data == 1) {
+          this.$message({
+            type: "success",
+            message: "申请成功"
+          })
+        }
+      })
     },
     handlePreview: function (file, fileList) {
       console.log(file);
       console.log(fileList);
       this.fileName = file.data;
-      this.form.CurriculumVitae=file.data
+      this.form.CurriculumVitae = file.data
       console.log(this.fileName);
-      
+
       // this.fileSrc = file.data
       // console.log(this.fileSrc)
       // let fname = fileList.response.data.lastIndexOf('/')
@@ -363,13 +327,13 @@ export default {
         ],
       },
       time: [],
-      form:{
-        studentName:'',
-        postName:'',
-        curriculumVitae:'',
-        studentID:this.studentID,
-        companyID:'',
-        postID:'',
+      form: {
+        studentName: '',
+        postName: '',
+        curriculumVitae: '',
+        studentID: this.studentID,
+        companyID: '',
+        postID: '',
       },
     };
   },
