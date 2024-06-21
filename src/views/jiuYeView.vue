@@ -387,16 +387,16 @@ export default {
             axios.get("/main/selectObtainEmploymentByStudentID", { params: { studentID: this.sid } }).then(res => {
                 this.ObtainEmployment = res.data.data
                 console.log("xxx")
-                for (let index = 0; index < this.postList.length; index++) {
-                    const t = this.ObtainEmployment[index].entryTime.indexOf('T');
-                    if (t != -1) {
-                        let date = new Date(this.ObtainEmployment[index].entryTime)
-                        date.setDate(date.getDate() + 1)
-                        let newDateStr = date.toISOString().slice(0, t);
-                        this.ObtainEmployment[index].entryTime = newDateStr
+                // for (let index = 0; index < this.postList.length; index++) {
+                //     const t = this.ObtainEmployment[index].entryTime.indexOf('T');
+                //     if (t != -1) {
+                //         let date = new Date(this.ObtainEmployment[index].entryTime)
+                //         date.setDate(date.getDate() + 1)
+                //         let newDateStr = date.toISOString().slice(0, t);
+                //         this.ObtainEmployment[index].entryTime = newDateStr
 
-                    }
-                }
+                //     }
+                // }
             })
         },
         selectStudentByName() {
@@ -437,17 +437,17 @@ export default {
                 this.ObtainEmployment = res.data.data
                 console.log(this.ObtainEmployment)
                 this.isEX = false
-                for (let index = 0; index < this.ObtainEmployment.length; index++) {
-                    const t = this.ObtainEmployment[index].entryTime.indexOf('T');
-                    if (t != -1) {
-                        let date = new Date(this.ObtainEmployment[index].entryTime)
-                        date.setDate(date.getDate() + 1)
-                        let newDateStr = date.toISOString().slice(0, t);
-                        this.ObtainEmployment[index].entryTime = newDateStr
-                        console.log(this.ObtainEmployment)
-                    }
+                // for (let index = 0; index < this.ObtainEmployment.length; index++) {
+                //     const t = this.ObtainEmployment[index].entryTime.indexOf('T');
+                //     if (t != -1) {
+                //         let date = new Date(this.ObtainEmployment[index].entryTime)
+                //         date.setDate(date.getDate() + 1)
+                //         let newDateStr = date.toISOString().slice(0, t);
+                //         this.ObtainEmployment[index].entryTime = newDateStr
+                //         console.log(this.ObtainEmployment)
+                //     }
 
-                }
+                // }
                 if (index.length > 1) {
                     this.isEX = true
                     this.$refs.refTable.toggleRowExpansion(index[0])
@@ -469,17 +469,17 @@ export default {
             axios.get("/main/selectObtainEmploymentByStudentID").then(res => {
                 this.ObtainEmployment = res.data.data
                 console.log(this.ObtainEmployment)
-                for (let index = 0; index < this.ObtainEmployment.length; index++) {
-                    const t = this.ObtainEmployment[index].entryTime.indexOf('T');
-                    console.log(t)
-                    if (t != -1) {
-                        let date = new Date(this.ObtainEmployment[index].entryTime)
-                        date.setDate(date.getDate() + 1)
-                        let newDateStr = date.toISOString().slice(0, t);
-                        this.ObtainEmployment[index].entryTime = newDateStr
+                // for (let index = 0; index < this.ObtainEmployment.length; index++) {
+                //     const t = this.ObtainEmployment[index].entryTime.indexOf('T');
+                //     console.log(t)
+                //     if (t != -1) {
+                //         let date = new Date(this.ObtainEmployment[index].entryTime)
+                //         date.setDate(date.getDate() + 1)
+                //         let newDateStr = date.toISOString().slice(0, t);
+                //         this.ObtainEmployment[index].entryTime = newDateStr
 
-                    }
-                }
+                //     }
+                // }
             })
         },
         handleSizeChange(val) {

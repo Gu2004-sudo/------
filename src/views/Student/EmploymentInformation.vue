@@ -47,7 +47,9 @@
           bac
           max-height="300"
         >
-          <el-table-column fixed prop="entryTime" label="日期" width="140">
+          <el-table-column fixed prop="entryTime" label="开始日期" width="140">
+          </el-table-column>
+          <el-table-column fixed prop="endTime" label="截止日期" width="140">
           </el-table-column>
           <el-table-column prop="companyName" label="公司名" width="110">
           </el-table-column>
@@ -94,7 +96,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[5, 7, 9, 10]"
           :page-size="this.page.court"
           layout="sizes, prev, pager, next"
           :total="total"
@@ -145,7 +147,12 @@ export default {
       console.log(row);
     },
     getData() {
-      axios.get("/main/selectPostByCompanyName", this.page).then((res) => {
+      axios.get("/main/selectPostByCompanyName", {
+        params:{
+          page:this.page.page,
+          court:this.page.court
+        }
+      }).then((res) => {
         // console.log(res)
         this.tableData = res.data.data.rows;
         this.total = res.data.data.total;
@@ -169,6 +176,7 @@ export default {
             }
             this.ge;
             console.log(this.tableData)
+            console.log(this.total)
           }
           this.getCompanyNameAndAddress(index, element.companyID);
         }
@@ -211,6 +219,7 @@ export default {
         .then((res) => {
           this.tableData = res.data.data.rows;
           this.total = res.data.data.total;
+          
           for (let index = 0; index < this.tableData.length; index++) {
             const element = this.tableData[index];
             const et = element.entryTime.indexOf("T");

@@ -402,7 +402,7 @@ export default {
         selectPostBySID() {
             axios.get("/main/selectPost", { params: { studentID: this.sid } }).then(res => {
                 this.postList = res.data.data
-                console.log("xxx")
+                console.log("xxx"+this.postList)
                 for (let index = 0; index < this.postList.length; index++) {
                     const t = this.postList[index].entryTime.indexOf('T');
                     if (t != -1) {
@@ -454,17 +454,17 @@ export default {
                 this.postList = res.data.data.rows
                 console.log(this.postList)
                 this.isEX = false
-                for (let index = 0; index < this.postList.length; index++) {
-                    const t = this.postList[index].entryTime.indexOf('T');
-                    if (t != -1) {
-                        let date = new Date(this.postList[index].entryTime)
-                        date.setDate(date.getDate() + 1)
-                        let newDateStr = date.toISOString().slice(0, t);
-                        this.postList[index].entryTime = newDateStr
+                // for (let index = 0; index < this.postList.length; index++) {
+                //     const t = this.postList[index].entryTime.indexOf('T');
+                //     if (t != -1) {
+                //         let date = new Date(this.postList[index].entryTime)
+                //         date.setDate(date.getDate() + 1)
+                //         let newDateStr = date.toISOString().slice(0, t);
+                //         this.postList[index].entryTime = newDateStr
 
-                    }
+                //     }
 
-                }
+                // }
                 if (index.length > 1) {
                     this.isEX = true
                     this.$refs.refTable.toggleRowExpansion(index[0])
@@ -477,17 +477,17 @@ export default {
             axios.get("/main/selectPracticePost").then(res => {
                 this.postList = res.data.data.rows
 
-
-                for (let index = 0; index < this.postList.length; index++) {
-                    const t = this.postList[index].entryTime.indexOf('T');
-                    console.log(t)
-                    if (t != -1) {
-                        let date = new Date(this.postList[index].entryTime)
-                        date.setDate(date.getDate() + 1)
-                        let newDateStr = date.toISOString().slice(0, t);
-                        this.postList[index].entryTime = newDateStr
-                    }
-                }
+                console.log(this.postList)
+                // for (let index = 0; index < this.postList.length; index++) {
+                //     const t = this.postList[index].enrolTime.indexOf('T');
+                //     console.log(t)
+                //     if (t != -1) {
+                //         let date = new Date(this.postList[index].entryTime)
+                //         date.setDate(date.getDate() + 1)
+                //         let newDateStr = date.toISOString().slice(0, t);
+                //         this.postList[index].entryTime = newDateStr
+                //     }
+                // }
 
             })
         },

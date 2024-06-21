@@ -190,10 +190,27 @@ export default {
     fetchJobs() {
       const time1 = this.value1.map(date => formatDate(new Date(date)))[0];
       const time2 = this.value1.map(date => formatDate(new Date(date)))[1];
+
       const data = { companyID: parseInt(localStorage.getItem("userName")), name: this.ZhiWeiname, time1: time1, time2: time2, status: this.status };
       console.log("data2", data);
       axios.post('/target/selectPostBycoID', data).then(response => {
-        console.log(response);
+      
+        for (let index = 0; index < response.data.length; index++) {
+          const element = response.data[index].entryTime;
+          const date = new Date(element);
+          const year = date.getFullYear();
+          const month = date.getMonth() + 1;
+          const day = date.getDate();
+          response.data[index].entryTime = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+          const element2 = response.data[index].endTime;
+          const date2 = new Date(element2);
+          const year2 = date2.getFullYear();
+          const month2 = date2.getMonth() + 1;
+          const day2 = date2.getDate();
+          response.data[index].endTime = `${year2}-${month2 < 10 ? '0' + month2 : month2}-${day2 < 10 ? '0' + day2 : day2}`;
+        
+        }
+       
         this.filteredJobs = response.data;
         this.totalCount = response.data.length;
       });
