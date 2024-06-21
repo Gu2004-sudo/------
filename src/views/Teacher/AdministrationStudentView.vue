@@ -5,7 +5,7 @@
                     v-model="stuName" clearable>
                 </el-input></label>
 
-            <el-button style="float: left;" type="primary">添加学生</el-button>
+            <el-button style="float: left;" type="primary" @click="dialogFormVisible1=true">添加学生</el-button>
             <el-upload action="/main/beforeUpload" style="float: left;margin-left: 10px;" :show-file-list="false"
                 :on-success="beforeUpload">
                 <el-button type="warning" style="float: left;">导入<i class="el-icon-download"></i></el-button>
@@ -28,7 +28,7 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.fileSrc == ''">无</span>
                     <span v-else-if="scope.row.fileSrc != ''"><a @click="downloadFile(scope.row)">{{ scope.row.fileSrc
-                    }}</a></span>
+                            }}</a></span>
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="地址" width="140">
@@ -52,8 +52,8 @@
 
 
             <el-dialog width="80%" title="实习信息" :visible.sync="innerVisible" append-to-body>
-                    <el-table :data="stuDate" border style="width: 100%">
-                        <el-table-column label="公司名称" width="180">
+                <el-table :data="stuDate" border style="width: 100%">
+                    <el-table-column label="公司名称" width="180">
                         <template slot-scope="scope">
                             <div v-for="compang in companyAll">
                                 <span v-if="scope.row.companyID == compang.companyID">{{ compang.companyName }}</span>
@@ -73,21 +73,21 @@
                     <el-table-column prop="postResponsibility" label="岗位简介" width="180">
                         <template slot-scope="scope">
                             <span style=" white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{
-                                scope.row.postResponsibility }}</span>
+                        scope.row.postResponsibility }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="postSalary1" label="薪资" width="180">
                     </el-table-column>
                     <el-table-column prop="statu" label="实习状态" width="180">
                     </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="100">
-                            <template slot-scope="scope">
-                                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                                <el-button type="text" size="small">编辑</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                
+                    <el-table-column fixed="right" label="操作" width="100">
+                        <template slot-scope="scope">
+                            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                            <el-button type="text" size="small">编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
             </el-dialog>
 
             <el-form :model="form">
@@ -119,10 +119,49 @@
                 <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
             </div>
         </el-dialog>
-
+        <el-dialog title="添加学生信息" :visible.sync="dialogFormVisible1" width="400px">
+            <el-form :model="form" label-width="80px">
+                <el-form-item label="学号" style="width: 350px;">
+                    <el-input v-model="form.studentNo"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名" style="width: 350px;">
+                    <el-input v-model="form.studentName"></el-input>
+                </el-form-item>
+                <el-form-item label="年龄" style="width: 350px;">
+                    <el-input v-model="form.studentAge"></el-input>
+                </el-form-item>
+                <el-form-item label="性别" style="width: 350px;">
+                    <el-radio v-model="form.studentSex" label="男">男</el-radio>
+                    <el-radio v-model="form.studentSex" label="女">女</el-radio>
+                </el-form-item>
+                <el-form-item label="身份证号" style="width: 350px;">
+                    <el-input v-model="form.idcard"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" style="width: 350px;">
+                    <el-input v-model="form.address"></el-input>
+                </el-form-item>
+                <el-form-item label="入学日期" style="width: 350px;">
+                    <el-date-picker v-model="form.enrolTime" type="date" placeholder="选择入学日期" style="width: 100%;"
+                        format="yyyy-MM-dd" value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="毕业日期" style="width: 350px;">
+                    <el-date-picker v-model="form.graduateTime" type="date" placeholder="选择毕业日期" style="width: 100%;"
+                        format="yyyy-MM-dd" value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="联系方式" style="width: 350px;">
+                    <el-input v-model="form.phone"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="handleAdd()">确 定</el-button>
+            </div>
+        </el-dialog>
         <el-pagination style="float: right; padding-top: 15px;" @size-change="handleSizeChange"
-            @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper" :total="total">
+            @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]"
+            :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
     </div>
 </template>
@@ -138,14 +177,24 @@ export default {
             stuDate: [],
             total: 1,
             currentPage: 1,
+            dialogFormVisible1: false,
             dialogFormVisible: false,
             form: {
+                studentNo: '',
                 studentName: '',
                 studentAge: '',
-                studentSex: '',
+                studentSex: '男',
+                idcard: '',
+                address: '',
                 phone: '',
-                address: ''
+                enrolTime: '',
+                graduateTime: '',
+                classID: '',
+                collegeID: '',
+                gradeID: '',
+                specialityID: '',
             },
+
             formLabelWidth: '120px',
             page: '',
             pageSize: '',
@@ -153,7 +202,44 @@ export default {
             companyAll: [],
         }
     },
+    created() {
+        this.selectTeacher();
+        
+    },
     methods: {
+        handleAdd() {
+            console.log(this.form)
+            axios.post("/main/insertStudent", this.form).then(res => {
+                this.$notify({
+                    title: '成功',
+                    message: '添加成功',
+                    type: 'success',
+                    offset: 100
+                });
+                this.form = {
+                    ...this.form,
+                    studentNo: '',
+                    studentName: '',
+                    studentAge: '',
+                    studentSex: '男',
+                    idcard: '',
+                    address: '',
+                    phone: '',
+                    enrolTime: '',
+                    graduateTime: '',
+
+                }
+                this.dialogFormVisible1 = false
+            }).catch(err => {
+                this.$notify.error({
+                    title: '失败',
+                    message: '添加失败,请检查学号是否重复',
+                    type: 'error',
+                    offset: 100
+                });
+            });
+
+        },
         beforeUpload(res) {
             console.log(res.data)
         },
@@ -188,7 +274,7 @@ export default {
                 }
             }).then(res => {
                 this.teacher = res.data.data
-
+                this.form.classID=this.teacher.classID
                 this.selectStudentClassID()
             })
         },

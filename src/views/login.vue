@@ -91,7 +91,7 @@ export default {
                     } else if (res.data.data2.roleID == 3) {
                         setTimeout(() => {
                             this.loading = false
-                            this.$router.push('/teacher/PersonalCenter/personalInformation')
+                            this.$router.push('/teacher/teaStudent')
                         }, 1000);
                     } else {
                         setTimeout(() => {

@@ -8,42 +8,40 @@
     </div>
     <div class="shiXiAndJiuYe_main">
       <div class="shixiData_get">
-                <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                    <el-form-item label="院校">
-                        <el-select v-model="value" placeholder="请选择院校" @change="handelCollege($event)">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label"
-                                :value="item.label">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="专业">
-                        <el-select v-model="zhuanYeValue" placeholder="请选择专业">
-                            <div slot="empty" style="margin: 10px;text-align: center;color: gray;">{{ value == '' ?
-                    '请先选择学院' : '暂无专业' }}</div>
-                            <el-option v-for="item in SpecialityOptions" :key="item.zhuanYeValue" :label="item.label"
-                                :value="item.label">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="年级">
-                        <el-select v-model="value2" placeholder="请选择年级">
-                            <el-option v-for="item in options2" :key="item.value2" :label="item.label"
-                                :value="item.label">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="班级">
-                        <el-input v-model="input" placeholder="请选择班级"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" icon="el-icon-search" @click="handleSelect()" :loading="loading">{{
-                    loading ==
-                        true
-                        ? '加载中' : '搜索' }}</el-button>
-                        <el-button type="info" icon="el-icon-refresh" @click="handleRefresh()">重置</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item label="院校">
+            <el-select v-model="value" placeholder="请选择院校" @change="handelCollege($event)">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="专业">
+            <el-select v-model="zhuanYeValue" placeholder="请选择专业">
+              <div slot="empty" style="margin: 10px;text-align: center;color: gray;">{{ value == '' ?
+          '请先选择学院' : '暂无专业' }}</div>
+              <el-option v-for="item in SpecialityOptions" :key="item.zhuanYeValue" :label="item.label"
+                :value="item.label">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="年级">
+            <el-select v-model="value2" placeholder="请选择年级">
+              <el-option v-for="item in options2" :key="item.value2" :label="item.label" :value="item.label">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="班级">
+            <el-input v-model="input" placeholder="请选择班级"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="handleSelect()" :loading="loading">{{
+          loading ==
+            true
+            ? '加载中' : '搜索' }}</el-button>
+            <el-button type="info" icon="el-icon-refresh" @click="handleRefresh()">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
       <div style="width: 100%;margin: 0 auto;display: flex;
             justify-content: center;
             align-items: center;">
@@ -270,24 +268,14 @@ export default {
             this.classData.push(element)
             let duiKou = await this.getDuiKou(element);
             let feiDuiKou = await this.getFeiDuiKou(element);
-            let kaoGong = await this.getKaoGong(element);
-            let canJun = await this.getCanJun(element);
-            let chuangYe = await this.getChuangYe(element);
-            let shengXue = await this.getShengXue(element);
             this.duiKou.push(duiKou.data.data)
             this.feiDuiKou.push(feiDuiKou.data.data)
-            this.kaoGong.push(kaoGong.data.data)
-            this.canJun.push(canJun.data.data)
-            this.chuangYe.push(chuangYe.data.data)
-            this.shengXue.push(shengXue.data.data)
             let stuNum = await this.getStuNum(element);
             let jiuYeLv = ((duiKou.data.data + feiDuiKou.data.data) / stuNum.data.data) * 100
-            let shengXueLv = (shengXue.data.data / stuNum.data.data) * 100
-            this.shengXueLv.push(Math.round(shengXueLv))
             this.jiuYeLv.push(Math.round(jiuYeLv))
           }
           //console.log(this.classData,this.stuNum)
-          this.init2(this.classData, this.duiKou, this.feiDuiKou, this.kaoGong, this.canJun, this.chuangYe, this.shengXueLv, this.shengXue, this.jiuYeLv)
+          this.init2(this.classData, this.duiKou, this.feiDuiKou, this.jiuYeLv)
           this.loading = false
 
         } else {
@@ -354,18 +342,7 @@ export default {
     getFeiDuiKou(data) {
       return axios.get("/main/studentNumber?className=" + data + "&contraErture=非对口就业")
     },
-    getKaoGong(data) {
-      return axios.get("/main/studentNumber?className=" + data + "&contraErture=考公")
-    },
-    getCanJun(data) {
-      return axios.get("/main/studentNumber?className=" + data + "&contraErture=参军")
-    },
-    getChuangYe(data) {
-      return axios.get("/main/studentNumber?className=" + data + "&contraErture=创业")
-    },
-    getShengXue(data) {
-      return axios.get("/main/studentNumber?className=" + data + "&contraErture=升学")
-    },
+    
     //获取班级学生数量
     getStuNum(data) {
       return axios.get("/main/studentNumber?className=" + data)
@@ -581,8 +558,8 @@ export default {
       option && myChart.setOption(option);
     },
     //就业可视化
-    init2(classData, duiKou, feiDuiKou, kaoGong, canJun, chuangYe, shengXueLv, shengXue, jiuYeLv) {
-      console.log('e', chuangYe)
+    init2(classData, duiKou, feiDuiKou, jiuYeLv) {
+    
       var chartDom = document.getElementById('data2');
       var myChart = echarts.init(chartDom);
       var option;
@@ -605,7 +582,7 @@ export default {
           }
         },
         legend: {
-          data: ['对口就业', '非对口就业', '就业率', '升学', '升学率', '考公', '参军', '创业']
+          data: ['对口就业', '非对口就业', '就业率']
         },
         xAxis: [
           {
@@ -662,18 +639,7 @@ export default {
             },
             data: feiDuiKou
           },
-          {
-            name: '升学率',
-            type: 'line',
-            yAxisIndex: 1,
-            smooth: true,
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + ' %';
-              }
-            },
-            data: shengXueLv
-          },
+
           {
             name: '就业率',
             type: 'line',
@@ -686,51 +652,7 @@ export default {
             },
             data: jiuYeLv
           },
-          {
-            name: '升学',
-            type: 'bar',
-            barWidth: '12%',
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + ' 人';
-              }
-            },
-            data: shengXue
-          },
-          {
-            name: '考公',
-            type: 'bar',
-            barWidth: '12%',
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + ' 人';
-              }
-            },
-            data: kaoGong
-          },
-          {
-            name: '参军',
-            type: 'bar',
-            barWidth: '12%',
 
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + ' 人';
-              }
-            },
-            data: canJun
-          },
-          {
-            name: '创业',
-            type: 'bar',
-            barWidth: '12%',
-            tooltip: {
-              valueFormatter: function (value) {
-                return value + ' 人';
-              }
-            },
-            data: chuangYe
-          },
         ]
       };
       option && myChart.setOption(option);
@@ -745,7 +667,8 @@ export default {
   height: 420px;
 
 }
-.shixiData_get{
+
+.shixiData_get {
   margin-top: 30px;
   padding: 20px 0
 }
@@ -758,6 +681,6 @@ export default {
 .shiXiAndJiuYe_main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   border-radius: 10px;
-  
+
 }
 </style>
