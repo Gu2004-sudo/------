@@ -238,7 +238,7 @@ export default {
                     offset: 100
                 });
             });
-
+// 1
         },
         beforeUpload(res) {
             console.log(res.data)
