@@ -22,16 +22,10 @@
         <el-button type="primary" icon="el-icon-search" style="width: 80px; height: 40px"
           @click="selectPostAndTime()">搜索</el-button>
       </div>
-      <div class="box2" style="height: 300px">
-        <el-table
-          :data="tableData"
-          :header-cell-style="{ background: '#eee', color: '#606266' }"
-          height="300"
-          style="width: 100%"
-          bac
-          max-height="300"
-        >
-          <el-table-column fixed prop="entryTime" label="日期" width="140">
+      <div class="box2" style="height: 450px">
+        <el-table :data="tableData" :header-cell-style="{ background: '#eee', color: '#606266' }" height="450"
+          style="width: 100%" bac max-height="450">
+          <el-table-column fixed prop="endTime" label="结束日期" width="140">
           </el-table-column>
           <el-table-column prop="companyName" label="公司名" width="110">
           </el-table-column>
@@ -65,15 +59,9 @@
         </el-table>
       </div>
       <div class="box3" style="height: 60px; background-color: white">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-sizes="[5, 10, 15, 20]"
-          :page-size="this.page.court"
-          layout="sizes, prev, pager, next"
-          :total="total"
-        >
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page.sync="currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="this.page.court"
+          layout="sizes, prev, pager, next" :total="total">
         </el-pagination>
       </div>
       <el-dialog title="简历上传" :visible.sync="dialogFormVisible">
@@ -99,14 +87,14 @@ export default {
     this.getData();
   },
   methods: {
-    filteredData() {
-      const now = new Date();
-      return this.tableData.filter(row => {
-        const entryTime = new Date(row.entryTime);
-        return entryTime >= now && row.numberPeople > 0;
-      });
-      // console.log(this.tableData, 'tab')
-    },
+    // filteredData() {
+    //   const now = new Date();
+    //   return this.tableData.filter(row => {
+    //     const endTime = new Date(row.endTime);
+    //     return endTime >= now && row.numberPeople > 0;
+    //   });
+    //   // console.log(this.tableData, 'tab')
+    // },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.page.court = val;
@@ -121,37 +109,19 @@ export default {
       console.log(row);
     },
     getData() {
-      axios.get("/main/selectPostByCompanyName", {
-        params:{
-          page:this.page.page,
-          court:this.page.court
+      axios.get("/main/getPostByTime", {
+        params: {
+          page: this.page.page,
+          court: this.page.court
+          
         }
       }).then((res) => {
-         console.log(res)
+        console.log(res, '212313131313132')
         this.tableData = res.data.data.rows;
         this.total = res.data.data.total;
         for (let index = 0; index < this.tableData.length; index++) {
           const element = this.tableData[index];
-          if (element.entryTime != null && element.entryTime != "" &&element.endTime!=''&&element.endTime!=null) {
-            const et = element.entryTime.indexOf("T");
-            const ed = element.endTime.indexOf("T");
-            // = this.postList[index].entryTime;
-            if (et != -1) {
-              let date = new Date(element.entryTime);
-              date.setDate(date.getDate() + 1);
-              let newDateStr = date.toISOString().slice(0, et);
-              this.tableData[index].entryTime = newDateStr;
-            }
-            if (ed != -1) {
-              let date = new Date(element.endTime);
-              date.setDate(date.getDate() + 1);
-              let newDateStr = date.toISOString().slice(0, et);
-              this.tableData[index].endTime = newDateStr;
-            }
-            this.ge;
-           // console.log(this.tableData)
-           // console.log(this.total)
-          }
+
           this.getCompanyNameAndAddress(index, element.companyID);
         }
       });
@@ -193,7 +163,7 @@ export default {
         .then((res) => {
           this.tableData = res.data.data.rows;
           this.total = res.data.data.total;
-          
+
           for (let index = 0; index < this.tableData.length; index++) {
             const element = this.tableData[index];
             const et = element.entryTime.indexOf("T");

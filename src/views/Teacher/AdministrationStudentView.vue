@@ -5,11 +5,12 @@
                     v-model="stuName" clearable>
                 </el-input></label>
 
-            <el-button style="float: left;" type="primary" @click="dialogFormVisible1=true">添加学生</el-button>
+            <el-button style="float: left;" type="primary" @click="dialogFormVisible1 = true">添加学生</el-button>
             <el-upload action="/main/beforeUpload" style="float: left;margin-left: 10px;" :show-file-list="false"
                 :on-success="beforeUpload">
                 <el-button type="warning" style="float: left;">导入<i class="el-icon-download"></i></el-button>
             </el-upload>
+            <el-button type="primary" @click="dialoge = true" style="float: left;margin-left: 10px;">模板下载</el-button>
             <el-button type="primary" style="float: left;margin-left: 10px;" @click="selectStudentClassID()"
                 icon="el-icon-search">搜索</el-button>
         </div>
@@ -163,6 +164,10 @@
             @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[5, 10, 15, 20]"
             :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
+        <el-dialog title="模板下载" :visible.sync="dialoge">
+
+            <span><a @click="download()">student.xls</a></span>
+        </el-dialog>
     </div>
 </template>
 
@@ -171,6 +176,8 @@ import axios from "axios";
 export default {
     data() {
         return {
+            dialoge: false,
+
             stuName: '',
             tableData: [],
             teacher: '',
@@ -204,7 +211,7 @@ export default {
     },
     created() {
         this.selectTeacher();
-        
+
     },
     methods: {
         handleAdd() {
@@ -238,10 +245,35 @@ export default {
                     offset: 100
                 });
             });
-// 1
+            // 1
         },
         beforeUpload(res) {
             console.log(res.data)
+        },
+        async download() {
+            const student = "student.xls";
+            const stu = "student.xls"
+            try {
+                // 请求文件数据
+                const response = await fetch("/main/download?name=" + student);
+                const data = await response.blob();
+                // 创建临时 URL
+                const tempUrl = URL.createObjectURL(data);
+                console.log(tempUrl)
+                // 创建隐藏的 <a> 标签并触发点击事件
+                const link = document.createElement('a');
+                link.href = tempUrl;
+                link.style.display = 'none';
+                link.download = stu;
+                document.body.appendChild(link);
+                link.click();
+
+                // 释放临时 URL
+                document.body.removeChild(link);
+                URL.revokeObjectURL(tempUrl);
+            } catch (error) {
+                console.error('下载文件失败：', error);
+            }
         },
         async downloadFile(row) {
 
@@ -274,7 +306,7 @@ export default {
                 }
             }).then(res => {
                 this.teacher = res.data.data
-                this.form.classID=this.teacher.classID
+                this.form.classID = this.teacher.classID
                 this.selectStudentClassID()
             })
         },
