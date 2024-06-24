@@ -116,7 +116,7 @@ export default {
       searchName: "", // 输入框姓名
       searchPosition: "", // 申请职位
       searchStatus: "", // 状态
-      studentID:'',
+      studentID: '',
 
       search: '',
       dialogVisible: false,
@@ -138,17 +138,17 @@ export default {
       totalCount: 0, // 总条数
       postID: '',
       post: '',
-      postStudent:{
-        entryTime:"",
-        endTime:'',
-        postName:'',
-        postResponsibility:'',
-        statu:'',
-        postNature:'',
-        postSalary:'',
-        studentID:'',
-        companyID:'',
-        can:'',
+      postStudent: {
+        entryTime: "",
+        endTime: '',
+        postName: '',
+        postResponsibility: '',
+        statu: '',
+        postNature: '',
+        postSalary: '',
+        studentID: '',
+        companyID: '',
+        can: '',
       }
     };
   },
@@ -161,8 +161,8 @@ export default {
 
       this.resultDialogVisible = true;
       this.postID = candidate.postID
-      this.can=candidate
-     
+      this.can = candidate
+
       console.log(this.can)
       this.applicationID2 = parseInt(candidate.applicationID)
     },
@@ -198,17 +198,17 @@ export default {
             }
           }).then(res => {
             this.post = res.data.data;
-            this.postStudent=res.data.data
-            this.postStudent.studentID=this.can.studentID
+            this.postStudent = res.data.data
+            this.postStudent.studentID = this.can.studentID
             console.log(this.postStudent)
-            axios.post("/main/insertPracticePost",JSON.stringify(this.postStudent),{
+            axios.post("/main/insertPracticePost", JSON.stringify(this.postStudent), {
               headers: {
                 'Content-Type': 'application/json',
               }
-            }).then(res=>{
+            }).then(res => {
               console.log(res.data.data)
             })
-            this.$set(this.post, ' this.post.numberPeople',  this.post.numberPeople-=1)
+            this.$set(this.post, ' this.post.numberPeople', this.post.numberPeople -= 1)
             console.log(this.post)
             axios.put("/main/updatePost", JSON.stringify(this.post), {
               headers: {
@@ -218,9 +218,9 @@ export default {
               console.log(res.data.data)
             })
           })
-          
+
         }
-       
+
       }).catch(error => {
         this.$message({
           message: '提交面试结果失败',
@@ -233,8 +233,17 @@ export default {
     ListShowMS() {
       const data = { companyID: parseInt(localStorage.getItem("userName")), name: this.searchName, zhiwei: this.searchPosition, zt: this.searchStatus }
       axios.post('/target/selectByinterview', data).then(response => {
+
+
         console.log("response", response.data);
         this.filteredCandidates = response.data;
+        for (let index = 0; index < this.filteredCandidates.length; index++) {
+          const dateArray = this.filteredCandidates[index].bengTime; // 假设这是后端返回的日期数组
+          const dateStr = `${dateArray[0]}-${dateArray[1]}-${dateArray[2]} ${dateArray[3]}:${dateArray[4]}`;
+          const dateObj = this.formatDate(dateStr);
+          this.filteredCandidates[index].bengTime = dateObj
+          
+        }
         this.totalCount = response.data.length;
       }).catch(error => {
         console.error(error);

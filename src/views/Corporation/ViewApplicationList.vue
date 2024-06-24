@@ -72,7 +72,7 @@
         <el-button type="success" style="width: 100px; height: 42px; margin-top: 10px; margin-left: 750px;"
           @click="exportToExcel">导出</el-button>
       </div>
-      <el-table :data="applications" style="width: 1000px;height: 500px;">
+      <el-table :data="paginatedApplications" style="width: 1000px;height: 500px;">
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column prop="studentName" label="姓名"></el-table-column>
         <el-table-column prop="postName" label="岗位"></el-table-column>
@@ -84,8 +84,9 @@
         <el-table-column label="简历">
           <template slot-scope="scope">
             <span v-if="scope.row.CurriculumVitae == ''">无</span>
-            <span v-else-if="scope.row.CurriculumVitae != ''"><a @click="downloadFile(scope.row)">{{ scope.row.CurriculumVitae
-            }}</a></span>
+            <span v-else-if="scope.row.CurriculumVitae != ''"><a @click="downloadFile(scope.row)">{{
+            scope.row.CurriculumVitae
+          }}</a></span>
 
           </template>
 
@@ -95,10 +96,14 @@
           <template slot-scope="scope">
             <el-button type="text" @click="viewApplication(scope.row)">查看详情</el-button>
 
-            <el-button v-if="scope.row.status!='面试已通过'&&scope.row.status!='待预约面试'" type="text" @click="handleApplication(scope.row, 1)">通过</el-button>
-            <el-button v-if="scope.row.status=='待预约面试'||scope.row.status=='面试已通过'" type="text"  disabled title="当前申请已经通过">通过</el-button>
-            <el-button v-if="scope.row.status!='面试已通过'&&scope.row.status!='待预约面试'" type="text" @click="delteApplication(scope.row)">拒绝</el-button>
-            <el-button v-if="scope.row.status=='待预约面试'||scope.row.status=='面试已通过'" type="text"  disabled title="当前申请已经通过">拒绝</el-button>
+            <el-button v-if="scope.row.status != '面试已通过' && scope.row.status != '待预约面试'" type="text"
+              @click="handleApplication(scope.row, 1)">通过</el-button>
+            <el-button v-if="scope.row.status == '待预约面试' || scope.row.status == '面试已通过'" type="text" disabled
+              title="当前申请已经通过">通过</el-button>
+            <el-button v-if="scope.row.status != '面试已通过' && scope.row.status != '待预约面试'" type="text"
+              @click="delteApplication(scope.row)">拒绝</el-button>
+            <el-button v-if="scope.row.status == '待预约面试' || scope.row.status == '面试已通过'" type="text" disabled
+              title="当前申请已经通过">拒绝</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -106,7 +111,7 @@
       <!-- 分页功能 -->
       <div style="">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pagination.currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="pagination.pageSize"
+          :current-page="pagination.currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pagination.pageSize"
           layout="total, sizes, prev, pager, next, jumper" :total="totalApplications">
         </el-pagination>
       </div>
@@ -132,7 +137,7 @@ export default {
       applications: [], // 所有申请列表数据
       pagination: {
         currentPage: 1,
-        pageSize: 10
+        pageSize: 5
       }
     };
   },
@@ -179,7 +184,7 @@ export default {
     },
     // 列表显示数据
     searchApplications() {
-      this.applications=[]
+      this.applications = []
       const time1 = this.searchForm.DTime.map(date => formatDate(new Date(date)))[0];
       const time2 = this.searchForm.DTime.map(date => formatDate(new Date(date)))[1];
       const data = {
@@ -190,8 +195,15 @@ export default {
         postName: this.searchForm.positionName
       };
       axios.post("/target/selectByapplication2", data).then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         this.applications = response.data;
+        for (let index = 0; index < this.applications.length; index++) {
+          const dateArray = this.applications[index].bengTime; // 假设这是后端返回的日期数组
+          const dateStr = `${dateArray[0]}-${dateArray[1]}-${dateArray[2]} ${dateArray[3]}:${dateArray[4]}`;
+          const dateObj = this.formatDate(dateStr);
+          this.applications[index].bengTime = dateObj
+
+        }
       });
     },
     resetSearchForm() {
@@ -220,8 +232,8 @@ export default {
         } else {
           sta = '未通过';
         }
-        console.log("账号”",application.studentID,)
-        const data = { studentID: application.studentID, status2: sta,applicationID:application.applicationID }
+        console.log("账号”", application.studentID,)
+        const data = { studentID: application.studentID, status2: sta, applicationID: application.applicationID }
         axios.post("/target/yesORNo", data).then(response => {
           console.log("response", response);
           this.searchApplications();
@@ -237,23 +249,23 @@ export default {
       });
 
     },
-    delteApplication(row){
-      if(confirm("您确定要拒绝这个申请吗？")){
+    delteApplication(row) {
+      if (confirm("您确定要拒绝这个申请吗？")) {
         console.log(row)
-        var qs=require('qs')
-        axios.post("/main/deleteApplication",qs.stringify({
-          applicationID:row.applicationID
-        })).then(res=>{
-          if(res.data.data==1){
+        var qs = require('qs')
+        axios.post("/main/deleteApplication", qs.stringify({
+          applicationID: row.applicationID
+        })).then(res => {
+          if (res.data.data == 1) {
             this.$message({
-              type:"success",
-              message:"已成功拒绝"
+              type: "success",
+              message: "已成功拒绝"
             })
             this.searchApplications()
           }
         })
       }
-      
+
     },
     handleSizeChange(size) {
       // 每页条数变化

@@ -69,7 +69,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[5, 10, 15, 20]"
           :page-size="this.page.court"
           layout="sizes, prev, pager, next"
           :total="total"
@@ -127,7 +127,7 @@ export default {
           court:this.page.court
         }
       }).then((res) => {
-        // console.log(res)
+         console.log(res)
         this.tableData = res.data.data.rows;
         this.total = res.data.data.total;
         for (let index = 0; index < this.tableData.length; index++) {
@@ -149,8 +149,8 @@ export default {
               this.tableData[index].endTime = newDateStr;
             }
             this.ge;
-            console.log(this.tableData)
-            console.log(this.total)
+           // console.log(this.tableData)
+           // console.log(this.total)
           }
           this.getCompanyNameAndAddress(index, element.companyID);
         }

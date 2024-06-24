@@ -14,6 +14,7 @@ import TeacherManage from '@/views/TeacherManage.vue'
 import CompanyManage from '@/views/CompanyManage.vue'
 import PostApplication from '@/views/PostApplicationView.vue'
 import postAudit from '@/views/postAudit.vue'
+import stuPost from '@/views/Teacher/stuPost.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,7 @@ const routes = [
     path: '/main',
     component: Main,
     children: [
+      
       { path: 'operations', name: '1', component: () => import('../views/index.vue') },
       { path: 'classManagement', name: '5-1', component: () => import('../views/classManagement.vue') },
       { path: 'stuData', name: '2-1', component: () => import('../views/stuData.vue') },
@@ -86,6 +88,7 @@ const routes = [
     name: 'teacher',
     component: () => import('../views/Teacher/TeacherIndexView.vue'),
     children: [
+      { path: 'stuPost', name: '1', component: stuPost },
       { path: 'teaStudent', name: '1', component: () => import('../views/Teacher/AdministrationStudentView.vue') },
       {
         path: 'Monthly', name: '1', component: () => import('../views/Teacher/Monthly.vue')

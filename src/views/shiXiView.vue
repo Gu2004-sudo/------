@@ -146,9 +146,9 @@
 
                 <el-form-item label="是否对口" style="width: 330px;">
 
-                    <el-select v-model="ruleForm.practiceID" placeholder="请选择">
-                        <el-option value="2" label="是"></el-option>
-                        <el-option value="1" label="否"></el-option>
+                    <el-select v-model="duikou" placeholder="请选择">
+                        <el-option value="是" label="是"></el-option>
+                        <el-option value="否" label="否"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="薪资" prop="postSalary" style="width: 330px;">
@@ -251,6 +251,7 @@ export default {
                 practicePostID: '',
                 companyID:'',
             },
+            duikou:'',
             dialogForm: false,
             from: {
                 postName: '',
@@ -270,6 +271,8 @@ export default {
             },
             className: '',
             companyAll: [],
+
+          
         }
 
     },
@@ -291,7 +294,7 @@ export default {
                 const data = await response.blob();
                 // 创建临时 URL
                 const tempUrl = URL.createObjectURL(data);
-                console.log(tempUrl)
+                //console.log(tempUrl)
                 // 创建隐藏的 <a> 标签并触发点击事件
                 const link = document.createElement('a');
                 link.href = tempUrl;
@@ -304,7 +307,7 @@ export default {
                 document.body.removeChild(link);
                 URL.revokeObjectURL(tempUrl);
             } catch (error) {
-                console.error('下载文件失败：', error);
+                //console.error('下载文件失败：', error);
             }
         },
         handleMonthly(sNo) {
@@ -330,8 +333,13 @@ export default {
             link.click();
         },
         insertPost() {
-            console.log(this.ruleForm)
-
+            this.student.isPractice=this.duikou;
+            console.log(this.student)
+            axios.put("/main/updateStudent", JSON.stringify(this.student), {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(res => {})
             axios.post("/main/insertPracticePost", JSON.stringify(this.ruleForm), {
                 headers: {
                     'Content-Type': 'application/json',
@@ -359,7 +367,7 @@ export default {
                 }
             }).then(res => {
                 if (res.data.code == 1) {
-                    console.log(1)
+                    //console.log(1)
 
                 }
             })
@@ -369,20 +377,21 @@ export default {
             this.ruleForm.studentID = row.studentID
 
             this.student = row;
-
+            console.log(this.student,'stu')
 
         },
         updatePost(row1, row2) {
 
             this.student = row2;
-            console.log(this.student)
+           // console.log(row1)
             this.sid = row1.studentID
             this.dialogForm = true
-            axios.get("/main/selectByPostID", {
+            axios.get("/main/getPracticePostById", {
                 params: {
-                    postID: row1.postID
+                    practicePostID: row1.practicePostID
                 }
             }).then(res => {
+                console.log(res,'rerrrr')
                 this.from = res.data.data
             })
         },
@@ -402,7 +411,7 @@ export default {
         selectPostBySID() {
             axios.get("/main/selectPost", { params: { studentID: this.sid } }).then(res => {
                 this.postList = res.data.data
-                console.log("xxx"+this.postList)
+               // //console.log("xxx"+this.postList)
                 for (let index = 0; index < this.postList.length; index++) {
                     const t = this.postList[index].entryTime.indexOf('T');
                     if (t != -1) {
@@ -416,7 +425,7 @@ export default {
             })
         },
         selectStudentByName() {
-            console.log(this.sname)
+           // //console.log(this.sname)
             axios.get("/main/selectStudentByContraErture", {
                 params: {
                     studentName: this.sname,
@@ -440,11 +449,11 @@ export default {
             }).then(res => {
                 this.tableData = res.data.data.rows;
                 this.total = res.data.data.total;
-                console.log(this.tableData)
+                //console.log(this.tableData)
             })
         },
         selectPost(row, index) {
-            console.log(row)
+            //console.log(row)
             if (this.isEX == false)
                 this.sid = row.studentID
             for (let index = 0; index < this.postList.length; index++) {
@@ -452,7 +461,7 @@ export default {
             }
             axios.get("/main/selectPracticePost?studentID=" + this.sid).then(res => {
                 this.postList = res.data.data.rows
-                console.log(this.postList)
+                //console.log(this.postList)
                 this.isEX = false
                 // for (let index = 0; index < this.postList.length; index++) {
                 //     const t = this.postList[index].entryTime.indexOf('T');
@@ -477,10 +486,10 @@ export default {
             axios.get("/main/selectPracticePost").then(res => {
                 this.postList = res.data.data.rows
 
-                console.log(this.postList)
+                //console.log(this.postList)
                 // for (let index = 0; index < this.postList.length; index++) {
                 //     const t = this.postList[index].enrolTime.indexOf('T');
-                //     console.log(t)
+                //     //console.log(t)
                 //     if (t != -1) {
                 //         let date = new Date(this.postList[index].entryTime)
                 //         date.setDate(date.getDate() + 1)
@@ -493,7 +502,7 @@ export default {
         },
         jwt() {
             this.jwt = localStorage.getItem('jwt')
-            //console.log(this.jwt)
+            ////console.log(this.jwt)
             axios.get("/login/isLogin", {
                 headers: {
                     token: `${this.jwt}`
@@ -504,7 +513,7 @@ export default {
                         path: '/'
                     })
                 }
-                //console.log(res.data.code)
+                ////console.log(res.data.code)
             })
         },
         selectPractice() {
@@ -516,17 +525,17 @@ export default {
         selectObtainEmployment() {
             axios.get("/main/selectObtainEmploymentByStudentID").then(res => {
                 this.ObtainEmployment = res.data.data
-                console.log(this.ObtainEmployment)
+                //console.log(this.ObtainEmployment)
             })
         },
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+            //console.log(`每页 ${val} 条`);
             this.court = val;
             this.selectStudentAll();
 
         },
         handleCurrentChange(val) {
-            console.log('当前页: ' + val);
+            //console.log('当前页: ' + val);
             this.page = val;
             this.selectStudentAll();
 
@@ -538,17 +547,17 @@ export default {
                 this.from[f] = '';
         },
         handleRemove(file, fileList) {
-            console.log(file, fileList);
-            console.log(1111)
+            //console.log(file, fileList);
+            //console.log(1111)
         },
         handlePreview: function (file, fileList) {
             this.student.fileSrc = fileList.response.data
             let fname = fileList.response.data.lastIndexOf('/')
-            console.log(fileList.response.data)
+            //console.log(fileList.response.data)
             if (fname != -1) {
-                console.log(fname)
+                //console.log(fname)
                 this.fileName = fileList.response.data.substring(fname + 1)
-                console.log(this.fileName)
+                //console.log(this.fileName)
             }
 
 
@@ -556,12 +565,12 @@ export default {
             this.fileList.url = file.response
 
             this.fileList.push[{ name: file.name, url: file.response }]
-            console.log(this.fileList)
+            //console.log(this.fileList)
 
         },
 
         beforeRemove(file) {
-            console.log(4444)
+            //console.log(4444)
             this.student.fileSrc = null
             return this.$confirm(`确定移除 ${file.name}?`);
 
@@ -569,7 +578,7 @@ export default {
         selectCompanyAll() {
             axios.get("/main/selectCompanyAll").then(res => {
                 this.companyAll = res.data.data;
-                console.log(this.companyAll)
+                //console.log(this.companyAll)
             })
         }
 

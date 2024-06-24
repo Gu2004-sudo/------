@@ -247,7 +247,7 @@ export default {
 
             try {
                 // 请求文件数据
-                const response = await fetch("/main/download?name=");
+                const response = await fetch("/main/download?name=test.txt");
                 const data = await response.blob();
                 // 创建临时 URL
                 const tempUrl = URL.createObjectURL(data);
@@ -256,7 +256,7 @@ export default {
                 const link = document.createElement('a');
                 link.href = tempUrl;
                 link.style.display = 'none';
-                link.download = row.fileSrc;
+                link.download = 'test.txt';
                 document.body.appendChild(link);
                 link.click();
 
