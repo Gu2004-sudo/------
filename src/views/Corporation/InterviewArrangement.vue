@@ -65,27 +65,38 @@
 
     <!-- 面试安排对话框 -->
     <el-dialog title="安排面试" :visible.sync="dialogVisible">
-      <el-form :model="scheduleForm" label-width="120px">
-        <!-- 面试日期 -->
-        <el-form-item label="最晚面试日期" prop="interviewDate">
-          <el-date-picker v-model="scheduleForm.interviewDate" type="date" placeholder="选择面试日期">
-          </el-date-picker>
-        </el-form-item>
-        <!-- 面试时间 -->
-        <el-form-item label="请选择几点" prop="interviewTime">
-          <el-time-picker v-model="scheduleForm.interviewTime" placeholder="选择面试时间">
-          </el-time-picker>
-        </el-form-item>
-        <!-- 面试地点 -->
-        <el-form-item label="面试地点" prop="location">
-          <el-input v-model="scheduleForm.location" placeholder="请输入面试地点"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmSchedule">确认</el-button>
-      </div>
-    </el-dialog>
+  <el-form :model="scheduleForm" label-width="120px">
+    <el-form-item label="面试官名称" prop="myName" required>
+      <el-input v-model="scheduleForm.myName" placeholder="请输入面试官名称"></el-input>
+    </el-form-item>
+    <el-form-item label="面试官手机号" prop="phone2" required>
+      <el-input v-model="scheduleForm.phone2" placeholder="请输入面试官手机号"></el-input>
+    </el-form-item>
+    <el-form-item label="面试官邮箱" prop="youxiang" required>
+      <el-input v-model="scheduleForm.youxiang" placeholder="请输入面试官邮箱"></el-input>
+    </el-form-item>
+    <!-- 面试日期 -->
+    <el-form-item label="最晚面试日期" prop="interviewDate" required>
+      <el-date-picker v-model="scheduleForm.interviewDate" type="date" style="margin-right: 390px;" placeholder="选择面试日期"></el-date-picker>
+    </el-form-item>
+    <!-- 面试时间 -->
+    <el-form-item label="请选择几点" prop="interviewTime" required>
+      <el-time-picker v-model="scheduleForm.interviewTime" style="margin-right: 390px;" placeholder="选择面试时间"></el-time-picker>
+    </el-form-item>
+    <!-- 面试地点 -->
+    <el-form-item label="面试地点" prop="location" required>
+      <el-input v-model="scheduleForm.location" placeholder="请输入面试地点"></el-input>
+    </el-form-item>
+    <el-form-item label="公司名称" prop="company22" required>
+      <el-input v-model="scheduleForm.company22" placeholder="请输入面试地点"></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取消</el-button>
+    <el-button type="primary" @click="confirmSchedule">确认</el-button>
+  </div>
+</el-dialog>
+
 
     <!-- 面试结果对话框 -->
     <el-dialog title="面试结果" :visible.sync="resultDialogVisible">
@@ -122,9 +133,14 @@ export default {
       dialogVisible: false,
       resultDialogVisible: false,
       scheduleForm: {
+        myName:"",
+        phone2:"",
+        youxiang:"",
+        company22:"",
         interviewDate: '',
         interviewTime: '',
         location: ''
+
       },
       applicationID2: "",
       interviewResultForm: {
@@ -233,9 +249,7 @@ export default {
     ListShowMS() {
       const data = { companyID: parseInt(localStorage.getItem("userName")), name: this.searchName, zhiwei: this.searchPosition, zt: this.searchStatus }
       axios.post('/target/selectByinterview', data).then(response => {
-
-
-        console.log("response", response.data);
+        console.log("列表数据", response.data);
         this.filteredCandidates = response.data;
         for (let index = 0; index < this.filteredCandidates.length; index++) {
           const dateArray = this.filteredCandidates[index].bengTime; // 假设这是后端返回的日期数组
@@ -263,7 +277,35 @@ export default {
     },
     scheduleInterview(candidate) {
       this.selectedCandidate = candidate;
+      console.log("candidate",candidate)
+      const name = candidate.studentName//获取申请人姓名
+      const phone = candidate.phone//申请人手机号
+      localStorage.setItem('name22', candidate.studentName);
+      localStorage.setItem('phone22', candidate.phone);
+      const userId = parseInt(localStorage.getItem("userName")); // 从 localStorage 中获取用户ID
+      const data = { BH: userId };
+      
+      axios.post('/target/selectByGS', data)
+        .then(response => {
+          const companyInfo = response.data;
+          companyInfo.registrationDate = new Date(companyInfo.registrationDate); // 确保是 Date 对象
+          
+          console.log("response",response)
+        })
+        .catch(error => {
+          console.error('获取公司信息失败:', error);
+          this.$message.error('获取公司信息失败');
+        });
+
+
       this.dialogVisible = true;
+       // 打印输入框的内容
+      //  console.log('面试官名称:', this.scheduleForm.myName);
+      // console.log('面试官手机号:', this.scheduleForm.phone2);
+      // console.log('面试官邮箱:', this.scheduleForm.youxiang);
+      // console.log('最晚面试日期:', this.scheduleForm.interviewDate);
+      // console.log('面试时间:', this.scheduleForm.interviewTime);
+      // console.log('面试地点:', this.scheduleForm.location);
     },
     confirmSchedule() {
       // 验证输入项是否为空
@@ -274,6 +316,8 @@ export default {
         });
         return;
       }
+      const interviewDateTime = this.formatDateTime(this.scheduleForm.interviewDate, this.scheduleForm.interviewTime);
+
       // 提交面试安排数据
       const data = {
         id: this.selectedCandidate.applicationID,
@@ -282,20 +326,54 @@ export default {
         // location: this.scheduleForm.location
       };
       axios.post('/target/updateByApp', data).then(response => {
-        console.log("response", response.data);
+        console.log("response222222222", response.data);
+
+        const stuName = localStorage.getItem("name22");
+        const phone22 = localStorage.getItem("phone22");
+        const data222 = {
+          mobile:phone22,
+          stuName:stuName,
+          address:this.scheduleForm.location,
+          time1:interviewDateTime,
+          myName:this.scheduleForm.myName,
+          company:this.scheduleForm.company22,
+          phone:this.scheduleForm.phone2,
+          youxiang:this.scheduleForm.youxiang
+       }
+       console.log("面试的数据",data222)
+       axios.post('/target/sms/send', data222).then(response => {
+          console.log("response", response.data);
+          this.response = response.data;
+        }).catch(error => {
+          console.error(error);
+          this.response = '发送失败';
+        });
+
         this.$message({
-          message: '面试已安排',
+          message: '面试信息已发送',
           type: 'success'
         });
         this.ListShowMS();
         this.dialogVisible = false;
       }).catch(error => {
         this.$message({
-          message: '安排面试失败',
+          message: '您输入过多,请联系管理员再重新输入',
           type: 'error'
         });
         console.error(error);
       });
+    },
+    formatDateTime(date, time) {
+      const dateObj = new Date(date);
+      const timeObj = new Date(time);
+
+      const year = dateObj.getFullYear();
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，需要加1
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      const hours = timeObj.getHours().toString().padStart(2, '0');
+      const minutes = timeObj.getMinutes().toString().padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
     },
     formatDate(date) {
       if (!date) return '';

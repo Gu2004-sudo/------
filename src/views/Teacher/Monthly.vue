@@ -211,18 +211,18 @@ export default {
         console.log(res,'y')
         this.total = res.data.data.total
         this.cardData = res.data.data.rows
-        for (let index = 0; index < this.cardData.length; index++) {
-          const element = this.cardData[index];
-          const et = element.createTime.indexOf('T')
-          // = this.postList[index].entryTime;
-          if (et != -1) {
-            let date = new Date(element.createTime)
-            date.setDate(date.getDate() + 1)
-            let newDateStr = date.toISOString().slice(0, et);
-            this.cardData[index].createTime = newDateStr
+        // for (let index = 0; index < this.cardData.length; index++) {
+        //   const element = this.cardData[index];
+        //   const et = element.createTime.indexOf('T')
+        //   // = this.postList[index].entryTime;
+        //   if (et != -1) {
+        //     let date = new Date(element.createTime)
+        //     date.setDate(date.getDate() + 1)
+        //     let newDateStr = date.toISOString().slice(0, et);
+        //     this.cardData[index].createTime = newDateStr
 
-          }
-        }
+        //   }
+        // }
       })
 
     },

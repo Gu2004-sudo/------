@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <ChatDialog />
+    
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <img src="../assets/XueYuanlogo.png" alt="" class="logo">
       <el-menu-item index="1">个人实习</el-menu-item>
       <el-menu-item index="2">就业信息</el-menu-item>
       <el-submenu index="3">
@@ -132,5 +134,12 @@ body {
 .dropdown-menu {
   width: 100px;
   margin-top: 10px;
+}
+.logo {
+  float: left;
+  height: 50px;
+  margin-top: 5px;
+  margin-left: 40px;
+  margin-right: 10px;
 }
 </style>

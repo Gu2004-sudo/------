@@ -55,7 +55,7 @@
         <el-table-column prop="statu" label="状态"></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="editJob(scope.row)">编辑</el-button>
+            <!-- <el-button size="mini" @click="editJob(scope.row)">编辑</el-button> -->
             <el-button size="mini" type="danger" @click="deleteJob(scope.row)">撤回</el-button>
           </template>
         </el-table-column>

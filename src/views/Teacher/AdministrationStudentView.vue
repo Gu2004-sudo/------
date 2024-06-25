@@ -77,7 +77,7 @@
                         scope.row.postResponsibility }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="postSalary1" label="薪资" width="180">
+                    <el-table-column prop="postSalary" label="薪资" width="180">
                     </el-table-column>
                     <el-table-column prop="statu" label="实习状态" width="180">
                     </el-table-column>
@@ -319,20 +319,20 @@ export default {
                 }
             }).then(res => {
                 this.stuDate = res.data.data.rows
-                for (let index = 0; index < this.stuDate.length; index++) {
-                    const t = this.stuDate[index].entryTime.indexOf('T');
-                    const e = this.stuDate[index].endTime.indexOf('T');
-                    if (t != -1) {
-                        let date = new Date(this.stuDate[index].entryTime)
-                        let date2 = new Date(this.stuDate[index].endTime)
-                        date.setDate(date.getDate() + 1)
-                        date2.setDate(date2.getDate() + 1)
-                        let newDateStr = date.toISOString().slice(0, t);
-                        let newDateStr2 = date2.toISOString().slice(0, t);
-                        this.stuDate[index].entryTime = newDateStr
-                        this.stuDate[index].endTime = newDateStr2
-                    }
-                }
+                // for (let index = 0; index < this.stuDate.length; index++) {
+                //     const t = this.stuDate[index].entryTime.indexOf('T');
+                //     const e = this.stuDate[index].endTime.indexOf('T');
+                //     if (t != -1) {
+                //         let date = new Date(this.stuDate[index].entryTime)
+                //         let date2 = new Date(this.stuDate[index].endTime)
+                //         date.setDate(date.getDate() + 1)
+                //         date2.setDate(date2.getDate() + 1)
+                //         let newDateStr = date.toISOString().slice(0, t);
+                //         let newDateStr2 = date2.toISOString().slice(0, t);
+                //         this.stuDate[index].entryTime = newDateStr
+                //         this.stuDate[index].endTime = newDateStr2
+                //     }
+                // }
             })
         },
         selectCompanyAll() {

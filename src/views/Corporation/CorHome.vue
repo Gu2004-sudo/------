@@ -11,7 +11,7 @@
             <el-menu-item index="/com/st">职位管理</el-menu-item>
             <el-menu-item index="/com/ViewApplicationList">查看申请列表</el-menu-item>
             <el-menu-item index="/com/InterviewArrangement">面试安排</el-menu-item>
-            <el-menu-item index="/com/HistoricalRecord">历史记录</el-menu-item>
+            <!-- <el-menu-item index="/com/HistoricalRecord">历史记录</el-menu-item> -->
            
             <el-col :span="3" style="float: right; padding-top: 10px;">
               <!-- 使用下拉框 -->
@@ -34,8 +34,6 @@
         
           <router-view></router-view>
         </el-main>
-      
-        <el-footer>Footer</el-footer>
     </el-container>
 
   </div>

@@ -107,6 +107,7 @@ export default {
           companyInfo.registrationDate = new Date(companyInfo.registrationDate); // 确保是 Date 对象
           this.companyForm = companyInfo;
           this.originalForm = { ...companyInfo }; // 保存原始数据
+          console.log("response",response)
         })
         .catch(error => {
           console.error('获取公司信息失败:', error);
