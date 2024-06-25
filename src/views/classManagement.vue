@@ -2,7 +2,7 @@
     <div>
         <div style="margin-top: 20px;">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>基础数据</el-breadcrumb-item>
+                <el-breadcrumb-item>业务管理</el-breadcrumb-item>
                 <el-breadcrumb-item>班级管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>

@@ -73,7 +73,7 @@
             </el-submenu> -->
             <el-menu-item index="/main/operations">
               <i class="el-icon-document"></i>
-              <span slot="title">业务管理</span>
+              <span slot="title">基础信息</span>
             </el-menu-item>
            
             <el-submenu index="2">
@@ -93,7 +93,7 @@
               <el-menu-item index="/main/UserManage">学生账户管理</el-menu-item>
               <el-menu-item index="/main/TeacherManage">教师账户管理</el-menu-item>
               <el-menu-item index="/main/CompanyManage">企业账户管理</el-menu-item>
-              <el-menu-item index="/main/PostApplication">企业工作申请</el-menu-item>
+              <el-menu-item index="/main/PostApplication">企业工作审核</el-menu-item>
             </el-submenu>
 
           </el-menu>

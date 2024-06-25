@@ -2,8 +2,8 @@
     <div class="UserManage">
         <div style="margin-bottom: 20px;">
             <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item style="font-weight: bold;">用户管理</el-breadcrumb-item>
-                <el-breadcrumb-item>用户信息</el-breadcrumb-item>
+                <el-breadcrumb-item style="font-weight: bold;">业务管理</el-breadcrumb-item>
+                <el-breadcrumb-item>学生用户信息</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="UserManage_box">
